@@ -9,6 +9,8 @@ class TicTacToe
   end
 
   def make_move(location)
+    raise "Bad location" if location >= SIZE ** 2
+
     if @board[location] then
       raise "Already Taken"
     else
@@ -22,25 +24,52 @@ class TicTacToe
     end
   end
 
+  Xs = ["X"] * SIZE
+  Os = ["O"] * SIZE
+
+  def same? arrays
+    arrays.any? { |array| array == Xs or array == Os }
+  end
+
   def game_over?
-    slices = board.each_slice(SIZE).map { |x| x }
-    transposed_slices = slices.transpose
+    same? rows or
+      same? cols or
+      same? diagonals
+  end
 
-    board.each_slice(SIZE) do |row|
-      return true if row.all? { |c| c == "X" }
+  def rows
+    board.each_slice(SIZE).to_a
+  end
+
+  def cols
+    rows.transpose
+  end
+
+  def diagonals
+    diagonal1 = board.each_slice(SIZE + 1).map { |x| x[0] }
+    diagonal2 = board.each_slice(SIZE - 1).map { |x| x[0] }[1..-2]
+    [diagonal1, diagonal2]
+  end
+
+  def cell_to_s value
+    spacer = "_"
+    # if last
+    #   spacer = " "
+    # else
+    #   spacer = "_"
+    # end
+
+    if value
+      "#{spacer}#{value}#{spacer}"
+    else
+      spacer * 3
     end
+  end
 
-    transposed_slices.each do |row|
-      return true if row.all? { |c| c == "X" }
-    end
-
-    diag1 = board.each_slice(SIZE + 1).map { |x| x[0] }
-    return true if diag1.all? { |c| c == "X" }
-
-    diag2 = board.each_slice(SIZE - 1).map { |x| x[0] }[1..-2]
-    return true if diag2.all? { |c| c == "X" }
-
-    false
+  def to_s
+    rows = board.map { |cell| cell_to_s cell }.
+      each_slice(SIZE).map { |r| r.join("|") }
+    rows[-1].gsub!("_", " ")
+    rows.join("\n")
   end
 end
-

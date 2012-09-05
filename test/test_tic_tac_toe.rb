@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'tic_tac_toe'
+require 'pp'
 
 class TestTicTacToe < Test::Unit::TestCase
   def test_there_is_a_board
@@ -72,5 +73,56 @@ class TestTicTacToe < Test::Unit::TestCase
 
     expected_board = [nil, nil, nil, nil, nil, nil, nil, nil, "X"]
     assert_equal expected_board, tic_tac.board
+  end
+
+  def test_x_wins
+    tic_tac = TicTacToe.new
+    tic_tac.make_move(0) # X
+    tic_tac.make_move(4) # O
+    tic_tac.make_move(1) # X
+    tic_tac.make_move(5) # O
+    tic_tac.make_move(2) # X
+
+    assert tic_tac.game_over?
+  end
+
+  def test_o_wins
+    tic_tac = TicTacToe.new
+    tic_tac.make_move(0) # X
+    tic_tac.make_move(3) # O
+    tic_tac.make_move(1) # X
+    tic_tac.make_move(4) # O
+    tic_tac.make_move(2) # X
+    tic_tac.make_move(5) # O
+
+    assert tic_tac.game_over?
+  end
+
+  def test_cant_play_off_board
+    tic_tac = TicTacToe.new
+
+    assert_raise RuntimeError do
+      tic_tac.make_move(13)
+    end
+  end
+
+  def test_to_s
+    tic_tac = TicTacToe.new
+
+    empty_board = "___|___|___\n___|___|___\n   |   |   "
+
+    assert_equal empty_board, tic_tac.to_s
+
+    tic_tac.make_move(0) # X
+
+    one_x_board = "_X_|___|___\n___|___|___\n   |   |   "
+    assert_equal one_x_board, tic_tac.to_s
+
+    (1..8).each do |x|
+      tic_tac.make_move(x)
+    end
+
+    full_board = "_X_|_O_|_X_\n_O_|_X_|_O_\n X | O | X "
+    assert_equal full_board, tic_tac.to_s
   end
 end
