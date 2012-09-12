@@ -1,6 +1,5 @@
 require 'test/unit'
 require 'tic_tac_toe'
-require 'pp'
 
 class TestTicTacToe < Test::Unit::TestCase
   def test_there_is_a_board

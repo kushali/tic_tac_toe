@@ -53,11 +53,6 @@ class TicTacToe
 
   def cell_to_s value
     spacer = "_"
-    # if last
-    #   spacer = " "
-    # else
-    #   spacer = "_"
-    # end
 
     if value
       "#{spacer}#{value}#{spacer}"
